@@ -263,7 +263,11 @@ class FilesTable:
             if user_id:
                 stmt = stmt.filter_by(user_id=user_id)
 
-            count_result = await db.execute(select(func.count()).select_from(stmt.subquery()))
+            count_stmt = select(func.count(File.id))
+            if user_id:
+                count_stmt = count_stmt.filter_by(user_id=user_id)
+
+            count_result = await db.execute(count_stmt)
             total = count_result.scalar()
 
             result = await db.execute(stmt.order_by(File.updated_at.desc(), File.id.desc()).offset(skip).limit(limit))
