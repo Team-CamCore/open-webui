@@ -5,12 +5,13 @@
 name: Python CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main, dev]
-    paths: ['backend/**', 'pyproject.toml', 'uv.lock', '.github/workflows/backend.yaml']
+    paths: ['backend/**', 'pyproject.toml', 'uv.lock', '.github/workflows/backend.yaml', 'deploy/**']
   pull_request:
     branches: [main, dev]
-    paths: ['backend/**', 'pyproject.toml', 'uv.lock', '.github/workflows/backend.yaml']
+    paths: ['backend/**', 'pyproject.toml', 'uv.lock', '.github/workflows/backend.yaml', 'deploy/**']
 
 concurrency:
   group: backend-${{ github.ref }}
@@ -34,7 +35,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install formatter
-        run: pip install "ruff>=0.15.5"
+        run: pip install "ruff==0.16.7"
 
       - name: Verify formatting
         run: ruff format --check . --exclude .venv --exclude venv
